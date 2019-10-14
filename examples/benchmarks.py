@@ -28,13 +28,11 @@ X_duration     = X.size( 1 ) / sr
 X              = torch.cat( [ X for i in range( {0} ) ] )
 
 # Divide in 64 2x overlapping frames
-n_frames       = 64
 frame_duration = .016 # 16 ms
 frame_overlap  = .5
 K              = 32
 lpc_prep       = LPCCoefficients(
     sr,
-    n_frames,
     frame_duration,
     frame_overlap,
     order = ( K - 1 )

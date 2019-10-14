@@ -21,12 +21,10 @@ from lpctorch import LPCCoefficients
 
 # Parameters
 #     * sr            : sample rate of the signal ( 16 kHz )
-#     * n_frames      : number of frames to slice the signal
 #     * frame_duration: duration of the window in seconds ( 16 ms )
 #     * frame_overlap : frame overlapping factor
 #     * K             : number of linear predictive coding coefficients
 sr             = 16000
-n_frames       = 64
 frame_duration = .016
 frame_overlap  = .5
 K              = 32
@@ -34,7 +32,6 @@ K              = 32
 # Initialize the module given all the parameters
 lpc_prep       = LPCCoefficients(
     sr,
-    n_frames,
     frame_duration,
     frame_overlap,
     order = ( K - 1 )

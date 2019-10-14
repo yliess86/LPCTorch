@@ -30,11 +30,8 @@ class LPCSlicer( nn.Module ):
     sr      : int
               default 16000
               Sample rate of the audio signal.
-    n       : int
-              default 64
-              Number of overlapping frames.
     duration: float
-              default .16
+              default .016
               Frame duration in seconds.
     overlap : float
               default .5
@@ -42,14 +39,17 @@ class LPCSlicer( nn.Module ):
     window  : Any
               default torch.hann_window
               Window function to be applied to each of the frame.
+    padded  : bool
+              defalt False
+              Do the input need to be padded to allow full windowing
     """
     def __init__(
         self    : 'LPCSlicer',
         sr      : int         = 16000,
-        n       : int         = 64,
-        duration: float       = .16,
+        duration: float       = .016,
         overlap : float       = .5,
-        window  : Any         = torch.hann_window
+        window  : Any         = torch.hann_window,
+        padded  : bool        = False
     ) -> None:
         """Init
 
@@ -58,11 +58,8 @@ class LPCSlicer( nn.Module ):
         sr      : int
                   default 16000
                   Sample rate of the audio signal.
-        n       : int
-                  default 64
-                  Number of overlapping frames.
         duration: float
-                  default .16
+                  default .016
                   Frame duration in seconds.
         overlap : float
                   default .5
@@ -70,13 +67,16 @@ class LPCSlicer( nn.Module ):
         window  : Any
                   default torch.hann_window
                   Window function to be applied to each of the frame.
+        padded  : bool
+                  defalt False
+                  Do the input need to be padded to allow full windowing
         """
         super( LPCSlicer, self ).__init__( )
-        self.n      = n
-        self.size   = int( np.floor( duration * sr ) )
-        self.offset = int( np.floor( self.size * overlap ) )
+        self.size    = int( np.floor( duration * sr ) )
+        self.offset  = int( np.floor( self.size * overlap ) )
+        self.padding = self.offset if padded else 0
 
-        window      = Variable( window( self.size ), requires_grad = False )
+        window       = Variable( window( self.size ), requires_grad = False )
         self.register_buffer( 'window', window )
 
     def forward( self: 'LPCSlicer', X: torch.Tensor ) -> torch.Tensor:
@@ -94,6 +94,7 @@ class LPCSlicer( nn.Module ):
            Input signal sliced into frames.
            Expected output is [ Batch, Frames, Samples ]
         """
+        X  = nn.functional.pad( X, ( 0, self.padding ), 'constant', 0. )
         X  = X.unfold( -1, self.size, self.offset )
         X -= X.mean( axis = -1, keepdim = True ) # axis = 'S' )
         X *= self.window
@@ -112,11 +113,8 @@ class LPCCoefficients( nn.Module ):
     sr      : int
               default 16000
               Sample rate of the audio signal.
-    n       : int
-              default 64
-              Number of overlapping frames.
     duration: float
-              default .16
+              default .016
               Frame duration in seconds.
     overlap : float
               default .5
@@ -126,15 +124,18 @@ class LPCCoefficients( nn.Module ):
     window  : Any
               default torch.hann_window
               Window function to be applied to each of the frame.
+    padded  : bool
+              defalt False
+              Do the input need to be padded to allow full windowing
     """
     def __init__(
         self: 'LPCCoefficients',
         sr      : int         = 16000,
-        n       : int         = 64,
-        duration: float       = .16,
+        duration: float       = .016,
         overlap : float       = .5,
         order   : int         = 31,
-        window  : Any         = torch.hann_window
+        window  : Any         = torch.hann_window,
+        padded  : bool        = False
     ) -> None:
         """Init
 
@@ -143,11 +144,8 @@ class LPCCoefficients( nn.Module ):
         sr      : int
                   default 16000
                   Sample rate of the audio signal.
-        n       : int
-                  default 64
-                  Number of overlapping frames.
         duration: floatAttributes
-                  default .16
+                  default .016
                   Frame duration in seconds.
         overlap : float
                   default .5
@@ -157,12 +155,15 @@ class LPCCoefficients( nn.Module ):
         window  : Any
                   default torch.hann_window
                   Window function to be applied to each of the frame.
+        padded  : bool
+                  defalt False
+                  Do the input need to be padded to allow full windowing
         """
         if order <= 1:
             raise ValueError('LPC order must be greater > 1 or it is useless')
 
         super( LPCCoefficients, self ).__init__( )
-        self.frames = LPCSlicer( sr, n, duration, overlap, window )
+        self.frames = LPCSlicer( sr, duration, overlap, window, padded )
         self.order  = order
         self.p      = order + 1
 
