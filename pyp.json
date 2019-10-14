@@ -19,7 +19,7 @@
         "exclude_packages": [
             "test"
         ],
-        "version": "0.1.0",
+        "version": "0.1.1",
         "ignored_errors": "E121,E123,E126,E226,E24,E704,W503,W504,E501",
         "release": {
             "commit_template": "Inscreased version to %s",
