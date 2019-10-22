@@ -206,7 +206,11 @@ class LPCCoefficients( nn.Module ):
             ( bwd_error * bwd_error ).sum( axis = -1 )
         ).unsqueeze( -1 )
 
+
         for i in range( self.order ):
+            not_ill_cond        = ( den > 0 ).float( )
+            den                *= not_ill_cond
+
             dot_bfwd            = ( bwd_error * fwd_error ).sum( axis = -1 )\
                                                            .unsqueeze( -1 )
 
@@ -230,4 +234,5 @@ class LPCCoefficients( nn.Module ):
             fwd_error           = fwd_error[ :, :, 1:   ]
             bwd_error           = bwd_error[ :, :,  :-1 ]
 
+        alphas[ alphas != alphas ] = 0.
         return alphas

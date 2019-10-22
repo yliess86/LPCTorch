@@ -42,10 +42,20 @@ print( f'[Init]   [Sample] size: { X.shape }, duration: { X_duration }' )
 print( f'[Me]     [Alphas] size: { alphas.shape }' )
 
 # ====================== NOT ME ================================================
+def librosa_lpc( X, order ):
+    try:
+        return lpc( X, order )
+    except:
+        res      = np.zeros( ( order + 1, ) )
+        res[ 0 ] = 1.
+        return res
+
 frames  = lpc_prep.frames( X.cuda( ) )
 frames  = frames[ 0 ].detach( ).cpu( ).numpy( )
-_alphas = np.array( [ lpc( frames[ i ], K - 1 ) for i in range( frames.shape[ 0 ] ) ] )
+_alphas = np.array( [ librosa_lpc( frames[ i ], K - 1 ) for i in range( frames.shape[ 0 ] ) ] )
 print( f'[Not Me] [Alphas] size: { _alphas.shape }' )
+
+print( f'Error [Me] vs [Not Me]: { ( alphas[ 0 ] - _alphas ).sum( axis = -1 ).mean( ) }' )
 
 # Draw frames
 fig = plt.figure( )
