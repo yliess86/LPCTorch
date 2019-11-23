@@ -9,7 +9,7 @@ from lpctorch.lpc import LPCCoefficients
 from lpctorch.lpc import LPCSlicer
 
 __name__ = "LPCTorch"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __author__ = "yliess"
 __url__ = "https://github.com/TowardHumanizedInteraction/LPCTorch"
 __email__ = "hatiyliess86@gmail.com"
