@@ -8,8 +8,8 @@ to apply an windowed lpc to a signal.
 from lpctorch.lpc import LPCCoefficients
 from lpctorch.lpc import LPCSlicer
 
-__name__ = "LPCTorch"
+__name__ = "LPCTorch2"
 __version__ = "0.1.4"
 __author__ = "yliess"
-__url__ = "https://github.com/TowardHumanizedInteraction/LPCTorch"
+__url__ = "https://github.com/Attornado/LPCTorch2"
 __email__ = "hatiyliess86@gmail.com"

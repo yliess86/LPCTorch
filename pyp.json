@@ -1,9 +1,9 @@
 {
     "project_info": {
-        "name": "LPCTorch",
+        "name": "LPCTorch2",
         "description": "LPC Utility for Pytorch Library.",
         "license": "MIT",
-        "url": "https://github.com/TowardHumanizedInteraction/LPCTorch"
+        "url": "https://github.com/Attornado/LPCTorch2"
     },
     "project_authors": [
         {
@@ -13,7 +13,7 @@
         }
     ],
     "project_vcs": {
-        "code_repository": "https://github.com/TowardHumanizedInteraction/LPCTorch.git",
+        "code_repository": "https://github.com/Attornado/LPCTorch2.git",
         "docker_repository": "",
         "pypi_repository": "https://upload.pypi.org/legacy/",
         "exclude_packages": [
@@ -35,12 +35,12 @@
     "project_requirements": {
         "python_version": ">=3.4, <4",
         "python_packages": [
-            "numpy==1.17.2",
-            "torch==1.2.0",
-            "torchaudio==0.3.0",
-            "tqdm==4.36.1",
-            "matplotlib==3.0.1",
-            "librosa==0.7.1"
+            "numpy>=1.17.2",
+            "torch>=1.2.0",
+            "torchaudio>=0.3.0",
+            "tqdm>=4.36.1",
+            "matplotlib>=3.0.1",
+            "librosa>=0.7.1"
         ]
     }
 }
